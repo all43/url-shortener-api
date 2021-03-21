@@ -5,7 +5,8 @@ const URLs = [
   'http://www.example.org/apparatus.aspx',
   'https://www.google.com/doodles/30th-anniversary-of-pac-man',
   'https://translate.google.com/?sl=auto&tl=de&text=ambiguity&op=translate',
-  'https://en.wikipedia.org/wiki/Berlin'
+  'https://en.wikipedia.org/wiki/Berlin',
+  'https://github.com/facebook/jest',
 ];
 
 function getRandomUrl() {
@@ -28,5 +29,12 @@ describe('Storage works properly', () => {
     const url = getRandomUrl();
     const key = storage.add(url);
     expect(storage.get(key)).toBe(url);
+  });
+  test('key collision is not possible', () => {
+    storage.allowedCharacters = 'abc';
+    storage.keyLength = 1;
+    const keys = URLs.map((url) => storage.add(url));
+    const uniqueKeys = new Set(keys);
+    expect(uniqueKeys.size).toBe(keys.length);
   });
 });

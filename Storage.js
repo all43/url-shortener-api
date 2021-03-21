@@ -2,10 +2,11 @@ class Storage {
   constructor() {
     this.shortUrls = new Map();
     this.keyLength = process.env.KEY_LENGTH || 4;
+    this.allowedCharacters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   }
 
   genRandomKey() {
-    const allowedCharacters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const { allowedCharacters } = this;
     let key = '';
     for (let i = 0; i < this.keyLength; i++) {
       const randomIndex = Math.floor(Math.random() * allowedCharacters.length);
