@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const Storage = require('./Storage');
+const { checkUrl } = require('./helpers');
 
 const storage = new Storage();
 
@@ -21,6 +22,9 @@ app.get('/api/keys/:key', (req, res) => {
 
 app.post('/api/urls', (req, res) => {
   const { url } = req.body;
+  if (!checkUrl(url)) {
+    res.status(400).end();
+  }
   const key = storage.add(url);
   res.status(201).json({ key });
 });
