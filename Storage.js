@@ -9,7 +9,6 @@ class Storage {
     let key = '';
     for (let i = 0; i < this.keyLength; i++) {
       const randomIndex = Math.floor(Math.random() * allowedCharacters.length);
-      console.log(allowedCharacters.length);
       key += allowedCharacters[randomIndex];
     }
     return key;
@@ -18,6 +17,7 @@ class Storage {
   add(link) {
     const key = this.genRandomKey();
     this.shortUrls.set(key, link);
+    return key;
   }
 
   get(key) {
