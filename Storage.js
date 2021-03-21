@@ -5,18 +5,33 @@ class Storage {
     this.allowedCharacters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   }
 
-  genRandomKey() {
+  getRandomKey() {
     const { allowedCharacters } = this;
-    let key = '';
-    for (let i = 0; i < this.keyLength; i++) {
-      const randomIndex = Math.floor(Math.random() * allowedCharacters.length);
-      key += allowedCharacters[randomIndex];
+    let collisions = 0;
+    const maxCollisions = process.env.MAX_COLLISIONS || 10;
+    
+    // having closure here allows us to keep collisions variable private
+    function generateKey() {
+      let key = '';
+      for (let i = 0; i < this.keyLength; i++) {
+        const randomIndex = Math.floor(Math.random() * allowedCharacters.length);
+        key += allowedCharacters[randomIndex];
+      }
+
+      // check if we have key collision
+      if (this.shortUrls.has(key)) {
+        collisions++;
+        // if we already have many collisions increase key length
+        if (collisions >= maxCollisions) this.keyLength++;
+        return generateKey.call(this);
+      }
+      return key;
     }
-    return key;
+    return generateKey.call(this);
   }
 
   add(link) {
-    const key = this.genRandomKey();
+    const key = this.getRandomKey();
     this.shortUrls.set(key, link);
     return key;
   }
