@@ -11,7 +11,7 @@ class Storage {
     const maxCollisions = process.env.MAX_COLLISIONS || 10;
     
     // having closure here allows us to keep collisions variable private
-    function generateKey() {
+    const generateKey = () => {
       let key = '';
       for (let i = 0; i < this.keyLength; i++) {
         const randomIndex = Math.floor(Math.random() * allowedCharacters.length);
@@ -23,11 +23,11 @@ class Storage {
         collisions++;
         // if we already have many collisions increase key length
         if (collisions >= maxCollisions) this.keyLength++;
-        return generateKey.call(this);
+        return generateKey();
       }
       return key;
     }
-    return generateKey.call(this);
+    return generateKey();
   }
 
   add(link) {
