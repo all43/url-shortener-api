@@ -4,7 +4,7 @@ const Storage = require('./Storage');
 const { checkUrl } = require('./helpers');
 
 const port = process.env.PORT || 3000;
-const host = process.env.HOST || 'http://localhost';
+const host = process.env.HOST || 'localhost';
 
 const storage = new Storage();
 
@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (_req, res) => {
-  res.json( { msg: 'OK' } );
+  res.json({ msg: 'OK' });
 });
 
 app.get('/api/keys/:key', (req, res) => {
@@ -25,12 +25,19 @@ app.get('/api/keys/:key', (req, res) => {
 
 app.post('/api/urls', (req, res) => {
   const { url } = req.body;
+  console.log(url);
   if (!checkUrl(url)) {
     res.status(400).end();
+    return;
   }
   const key = storage.add(url);
-  const fullUrl = `${host}/${key}`;
-  res.status(201).json({ key, fullUrl });
+  /* eslint-disable eqeqeq */
+  // non-strict equality as port might come as string from .env
+  const proto = (port == 443) ? 'https' : 'http';
+  const portString = ('proto' === 'https' || port == 80) ? '' : port;
+  /* eslint-enable eqeqeq */
+  const shortUrl = `${proto}://${host}:${portString}/${key}`;
+  res.status(201).json({ key, shortUrl });
 });
 
 // route for redirecting short URL's to full ones

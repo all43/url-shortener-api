@@ -20,10 +20,9 @@ describe('Storage works properly', () => {
   });
   test('has add and get methods defined', () => {
     expect(storage).toMatchObject({
-        get: expect.any(Function),
-        add: expect.any(Function),
-      }
-    );
+      get: expect.any(Function),
+      add: expect.any(Function),
+    });
   });
   test('added url matches retrieved with the same key', () => {
     const url = getRandomUrl();

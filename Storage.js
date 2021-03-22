@@ -9,7 +9,7 @@ class Storage {
     const { allowedCharacters } = this;
     let collisions = 0;
     const maxCollisions = process.env.MAX_COLLISIONS || 10;
-    
+
     // having closure here allows us to keep collisions variable private
     const generateKey = () => {
       let key = '';
@@ -26,7 +26,7 @@ class Storage {
         return generateKey();
       }
       return key;
-    }
+    };
     return generateKey();
   }
 
