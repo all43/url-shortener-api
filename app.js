@@ -3,6 +3,9 @@ const cors = require('cors');
 const Storage = require('./Storage');
 const { checkUrl } = require('./helpers');
 
+const port = process.env.PORT || 3000;
+const host = process.env.HOST || 'http://localhost';
+
 const storage = new Storage();
 
 const app = express();
@@ -26,10 +29,20 @@ app.post('/api/urls', (req, res) => {
     res.status(400).end();
   }
   const key = storage.add(url);
-  res.status(201).json({ key });
+  const fullUrl = `${host}/${key}`;
+  res.status(201).json({ key, fullUrl });
 });
 
-const port = process.env.PORT || 3000;
+// route for redirecting short URL's to full ones
+app.get('/:key', (req, res) => {
+  const { key } = req.params;
+  const url = storage.get(key);
+  if (url) {
+    res.redirect(url);
+  } else {
+    res.status(404).end();
+  }
+});
 
 const server = app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
