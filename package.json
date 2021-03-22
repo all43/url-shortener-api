@@ -4,6 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "node app",
+    "lint": "eslint src --ext .js",
     "test": "jest"
   },
   "author": "Evgenii Malikov",
